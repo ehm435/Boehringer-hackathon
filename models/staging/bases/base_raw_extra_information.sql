@@ -2,7 +2,7 @@
 
 SELECT
     -- ID paciente
-    CAST("SEQN" AS NUMBER(38,0)) AS patient_id,
+    CAST("SEQN" AS varchar) AS patient_id,
 
     -- Fecha/hora de la última visita
     TO_TIMESTAMP_NTZ("ULTIMA_VISITA") AS ultima_visita_ts,
