@@ -1,0 +1,166 @@
+09:13:34 version: 2
+
+sources:
+  - name: raw_data
+    description: ""
+    tables:
+      - name: raw_demographic
+        description: ""
+        columns:
+          - name: seqn
+            data_type: number
+            description: ""
+          - name: riagendr
+            data_type: number
+            description: ""
+          - name: ridageyr
+            data_type: number
+            description: ""
+          - name: dmdeduc2
+            data_type: number
+            description: ""
+          - name: dmdmartl
+            data_type: number
+            description: ""
+          - name: ridexprg
+            data_type: number
+            description: ""
+          - name: sialang
+            data_type: number
+            description: ""
+
+      - name: raw_examination
+        description: ""
+        columns:
+          - name: seqn
+            data_type: number
+            description: ""
+          - name: bpxsy1
+            data_type: number
+            description: ""
+          - name: bpxdi1
+            data_type: number
+            description: ""
+          - name: bpxsy2
+            data_type: number
+            description: ""
+          - name: bpxdi2
+            data_type: number
+            description: ""
+          - name: bpxsy3
+            data_type: number
+            description: ""
+          - name: bpxdi3
+            data_type: number
+            description: ""
+          - name: bpxsy4
+            data_type: number
+            description: ""
+          - name: bmxwt
+            data_type: number
+            description: ""
+          - name: bmxht
+            data_type: number
+            description: ""
+          - name: bmxbmi
+            data_type: number
+            description: ""
+          - name: bmxwaist
+            data_type: number
+            description: ""
+
+      - name: raw_labs
+        description: ""
+        columns:
+          - name: seqn
+            data_type: number
+            description: ""
+          - name: lbxsbu
+            data_type: number
+            description: ""
+          - name: lbxscr
+            data_type: number
+            description: ""
+          - name: lbxsksi
+            data_type: number
+            description: ""
+          - name: lbxsnasi
+            data_type: number
+            description: ""
+          - name: lbxhgb
+            data_type: number
+            description: ""
+          - name: lbxhct
+            data_type: number
+            description: ""
+          - name: lbdhdd
+            data_type: number
+            description: ""
+          - name: lbxgh
+            data_type: number
+            description: ""
+          - name: lbdldl
+            data_type: number
+            description: ""
+          - name: lbxglt
+            data_type: number
+            description: ""
+          - name: lbxtc
+            data_type: number
+            description: ""
+
+      - name: raw_medications
+        description: ""
+        columns:
+          - name: seqn
+            data_type: number
+            description: ""
+          - name: rxduse
+            data_type: number
+            description: ""
+          - name: rxddrug
+            data_type: varchar
+            description: ""
+          - name: rxddrgid
+            data_type: varchar
+            description: ""
+          - name: rxddays
+            data_type: number
+            description: ""
+
+      - name: raw_questionnaire
+        description: ""
+        columns:
+          - name: seqn
+            data_type: number
+            description: ""
+          - name: alq160
+            data_type: number
+            description: ""
+          - name: bpq020
+            data_type: number
+            description: ""
+          - name: bpq050a
+            data_type: number
+            description: ""
+          - name: diq010
+            data_type: number
+            description: ""
+          - name: diq050
+            data_type: number
+            description: ""
+          - name: mcq010
+            data_type: number
+            description: ""
+          - name: mcq050
+            data_type: number
+            description: ""
+          - name: mcq160a
+            data_type: number
+            description: ""
+          - name: smq020
+            data_type: number
+            description: ""
+          - name: smq040
+            data_type: number
+            description: ""
