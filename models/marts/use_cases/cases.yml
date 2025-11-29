@@ -1,0 +1,132 @@
+version: 2
+
+models:
+
+  - name: mart_patient_history_with_risk
+    description: >
+      Datamart de historia clínica del paciente. Una fila por paciente y fecha
+      de referencia, con métricas clínicas, índice de riesgo y prioridad.
+
+    columns:
+      - name: fact_patient_clinical_sk
+        description: "Clave surrogate de la fila de hechos original en fact_patient_clinical."
+        tests:
+          - not_null
+          - unique
+
+      - name: patient_sk
+        description: "Clave surrogate de la dimensión paciente."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_patient')
+                field: patient_sk
+
+      - name: date_sk
+        description: "Clave surrogate de la dimensión fecha."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_sk
+
+      - name: fecha_referencia
+        description: "Fecha de referencia clínica (última visita o fecha derivada)."
+        tests:
+          - not_null
+
+      - name: patient_id_natural
+        description: "Identificador natural del paciente (procedente del sistema origen)."
+
+      - name: edad_anios
+        description: "Edad del paciente en años en el momento de referencia."
+      - name: sexo_biologico_codigo
+        description: "Código de sexo biológico (p.ej. 1=Hombre, 2=Mujer)."
+      - name: hta_diagnosticada_codigo
+        description: "Indicador/código de hipertensión diagnosticada."
+      - name: diabetes_diagnosticada_codigo
+        description: "Indicador/código de diabetes diagnosticada."
+      - name: cardiopatia_diagnosticada_codigo
+        description: "Indicador/código de cardiopatía diagnosticada."
+      - name: epoc_u_otro_pulmonar_cronico_codigo
+        description: "Indicador/código de EPOC u otra enfermedad pulmonar crónica."
+      - name: es_paciente_oncologico
+        description: "Indicador booleano de paciente oncológico."
+      - name: tabaquismo_actual_codigo
+        description: "Código de tabaquismo actual."
+      - name: fecha_ultima_visita
+        description: "Fecha real de la última visita registrada en el sistema."
+
+      - name: tension_sistolica_media
+        description: "Tensión arterial sistólica media estimada (mmHg)."
+      - name: tension_diastolica_media
+        description: "Tensión arterial diastólica media estimada (mmHg)."
+      - name: imc
+        description: "Índice de masa corporal (kg/m²)."
+
+      - name: glucosa_plasmatica_mg_dl
+        description: "Glucosa plasmática (mg/dL)."
+      - name: hba1c_porcentaje
+        description: "Hemoglobina glicosilada HbA1c (%)."
+      - name: creatinina_mg_dl
+        description: "Creatinina sérica (mg/dL)."
+      - name: urea_mg_dl
+        description: "Urea/BUN (mg/dL)."
+      - name: colesterol_total_mg_dl
+        description: "Colesterol total (mg/dL)."
+      - name: colesterol_hdl_mg_dl
+        description: "Colesterol HDL (mg/dL)."
+      - name: colesterol_ldl_mg_dl
+        description: "Colesterol LDL (mg/dL)."
+
+      - name: num_medicamentos_activos
+        description: "Número de medicamentos activos reportados."
+      - name: num_urgencias_12m
+        description: "Número de urgencias en los últimos 12 meses (si se alimenta)."
+      - name: num_no_show_12m
+        description: "Número de citas perdidas (no-show) en los últimos 12 meses."
+      - name: num_medicos_distintos_12m
+        description: "Número de médicos distintos en los últimos 12 meses."
+
+      - name: indice_riesgo
+        description: "Índice de riesgo clínico del paciente en esa fecha."
+      - name: prioridad_semaforo
+        description: "Prioridad de gestión en esa fecha (ROJO/NARANJA/AMARILLO/VERDE/AZUL)."
+
+  - name: mart_patient_risk_main_condition
+    description: >
+      Datamart de lista priorizada de pacientes. Último estado conocido por
+      paciente con índice de riesgo, prioridad y condición principal de riesgo.
+
+    columns:
+      - name: patient_sk
+        description: "Clave surrogate de la dimensión paciente."
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('dim_patient')
+                field: patient_sk
+
+      - name: patient_id_natural
+        description: "Identificador natural del paciente (procedente del sistema origen)."
+
+      - name: fecha_referencia
+        description: "Fecha de la última observación clínica usada para el cálculo del riesgo."
+        tests:
+          - not_null
+
+      - name: edad_anios
+        description: "Edad del paciente (años) en la última observación."
+      - name: sexo_biologico_codigo
+        description: "Código de sexo biológico."
+
+      - name: indice_riesgo
+        description: "Índice de riesgo clínico actual del paciente."
+      - name: prioridad_semaforo
+        description: "Prioridad de gestión actual (ROJO/NARANJA/AMARILLO/VERDE/AZUL)."
+      - name: condicion_principal_riesgo
+        description: "Condición que más contribuye al riesgo del paciente, lista para mostrar en el panel."

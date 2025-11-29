@@ -22,4 +22,4 @@ select
     dayofweek(date_day)                    as day_of_week,
     to_char(date_day, 'Mon')               as month_name,
     to_char(date_day, 'Dy')                as day_name
-from date_spine;
+from date_spine
