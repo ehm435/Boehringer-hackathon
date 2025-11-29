@@ -94,4 +94,4 @@ joined as (
 select
     {{ dbt_utils.generate_surrogate_key(['patient_id_natural']) }} as patient_sk,
     joined.*
-from joined;
+from joined

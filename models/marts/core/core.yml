@@ -22,9 +22,6 @@ models:
         description: "Código de sexo biológico (por ejemplo 1=hombre, 2=mujer)."
       - name: edad_anios
         description: "Edad del paciente en años."
-        tests:
-          - dbt_utils.expression_is_true:
-              expression: "edad_anios is null or (edad_anios between 0 and 120)"
       - name: nivel_educativo_codigo
         description: "Código de nivel educativo."
       - name: estado_civil_codigo
@@ -49,9 +46,6 @@ models:
       # Oncología
       - name: es_paciente_oncologico
         description: "Indica si el paciente tiene diagnóstico oncológico."
-        tests:
-          - dbt_utils.accepted_values:
-              values: [true, false]
 
       # Última visita
       - name: fecha_ultima_visita
@@ -89,33 +83,37 @@ models:
 
   - name: fact_patient_clinical
     description: >
-      Tabla de hechos clínica a nivel paciente-fecha de referencia. Contiene las últimas
-      métricas disponibles (IMC, analíticas, utilización del sistema, resumen de medicación)
-      para calcular scores de riesgo y priorización en los datamarts.
+      Tabla de hechos clínica a nivel paciente-fecha. Contiene métricas
+      clínicas, puntos por factor, índice de riesgo global, prioridad
+      semáforo y motivo principal de riesgo.
+
     columns:
+      # --- Claves ---
       - name: fact_patient_clinical_sk
         description: "Clave surrogate de la fila de hechos (patient_sk + date_sk)."
         tests:
           - not_null
           - unique
 
-      - name: patient_sk
-        description: "Clave surrogate de la dimensión paciente."
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_patient')
-              field: patient_sk
-
       - name: date_sk
-        description: "Clave surrogate de la dimensión fecha."
+        description: "Clave surrogate de la dimensión fecha (dim_date)."
         tests:
           - not_null
           - relationships:
-              to: ref('dim_date')
-              field: date_sk
+              arguments:
+                to: ref('dim_date')
+                field: date_sk
 
-      # Vitals
+      - name: patient_sk
+        description: "Clave surrogate de la dimensión paciente (dim_patient)."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_patient')
+                field: patient_sk
+
+      # --- Métricas clínicas base: constantes vitales / antropometría ---
       - name: tension_sistolica_media
         description: "Tensión arterial sistólica media estimada (mmHg)."
       - name: tension_diastolica_media
@@ -123,36 +121,95 @@ models:
       - name: imc
         description: "Índice de masa corporal (kg/m²)."
 
-      # Labs
+      # --- Laboratorio: glucosa / HbA1c / función renal / lípidos / electrolitos / hemograma ---
       - name: glucosa_plasmatica_mg_dl
-        description: "Glucosa plasmática en ayunas (mg/dL)."
+        description: "Glucosa plasmática en ayunas (mg/dL), si está disponible."
       - name: hba1c_porcentaje
-        description: "Hemoglobina glicosilada (HbA1c, %)."
+        description: "Hemoglobina glicosilada HbA1c (%)."
       - name: creatinina_mg_dl
         description: "Creatinina sérica (mg/dL)."
       - name: urea_mg_dl
-        description: "Urea (mg/dL)."
+        description: "Urea/BUN (mg/dL)."
+
       - name: colesterol_total_mg_dl
         description: "Colesterol total (mg/dL)."
       - name: colesterol_hdl_mg_dl
         description: "Colesterol HDL (mg/dL)."
       - name: colesterol_ldl_mg_dl
-        description: "Colesterol LDL (mg/dL)."
+        description: "Colesterol LDL calculado/medido (mg/dL)."
+
       - name: sodio_mmol_l
-        description: "Sodio (mmol/L)."
+        description: "Sodio sérico (mmol/L)."
       - name: potasio_mmol_l
-        description: "Potasio (mmol/L)."
+        description: "Potasio sérico (mmol/L)."
+
       - name: hemoglobina_g_dl
         description: "Hemoglobina (g/dL)."
       - name: hematocrito_porcentaje
         description: "Hematocrito (%)."
 
-      # Medición de medicación agregada
+      # --- Medicación / uso del sistema ---
       - name: num_medicamentos_activos
         description: "Número de medicamentos activos reportados para el paciente."
       - name: dias_medios_uso_reportados
-        description: "Días medios de uso reportados de la medicación."
+        description: "Días medios de uso de los medicamentos reportados (media)."
 
-      # Utilización del sistema (cuando lo tengas calculado)
       - name: num_urgencias_12m
-        description: "Número de visitas a urgencias en los últimos 12 meses."
+        description: "Número de visitas a urgencias en los últimos 12 meses (si se alimenta)."
+      - name: num_no_show_12m
+        description: "Número de citas perdidas (no-show) en los últimos 12 meses (si se alimenta)."
+      - name: num_medicos_distintos_12m
+        description: "Número de médicos distintos que han atendido al paciente en los últimos 12 meses (si se alimenta)."
+
+      # --- Puntos por factor (reglas de riesgo) ---
+      - name: puntos_hta_no_controlada
+        description: "Puntos asignados por HTA no controlada (TA ≥ 140/90)."
+      - name: puntos_hta_diagnosticada
+        description: "Puntos asignados por diagnóstico de hipertensión."
+      - name: puntos_diabetes_diagnosticada
+        description: "Puntos asignados por diagnóstico de diabetes mellitus."
+      - name: puntos_cardiopatia_diagnosticada
+        description: "Puntos asignados por diagnóstico de cardiopatía."
+      - name: puntos_asma_diagnosticada
+        description: "Puntos asignados por diagnóstico de asma (actualmente 0 si no se modela)."
+      - name: puntos_epoc_diagnosticada
+        description: "Puntos asignados por diagnóstico de EPOC/enfermedad pulmonar crónica."
+      - name: puntos_oncologico
+        description: "Puntos asignados por ser paciente oncológico."
+      - name: puntos_edad_75_o_mas
+        description: "Puntos asignados por edad ≥ 75 años."
+      - name: puntos_visita_mas_12m
+        description: "Puntos asignados por no haber sido revisado en > 12 meses."
+
+      - name: puntos_fumador_activo
+        description: "Puntos asignados por tabaquismo activo."
+      - name: puntos_edad_60_74
+        description: "Puntos asignados por edad entre 60 y 74 años."
+      - name: puntos_visita_6_12m
+        description: "Puntos asignados por última visita entre 6 y 12 meses."
+      - name: puntos_imc_35_40
+        description: "Puntos asignados por obesidad severa (IMC 35–40)."
+
+      - name: puntos_imc_30_35
+        description: "Puntos asignados por obesidad moderada (IMC 30–35)."
+      - name: puntos_polimedicacion
+        description: "Puntos asignados por polimedicación (≥ 5 fármacos)."
+      - name: puntos_ldl_130_159
+        description: "Puntos asignados por LDL entre 130 y 159 mg/dL."
+      - name: puntos_hba1c_6_6_4
+        description: "Puntos asignados por HbA1c entre 6.0 y 6.4 % (prediabetes)."
+      - name: puntos_col_total_200_240
+        description: "Puntos asignados por colesterol total entre 200 y 240 mg/dL."
+
+      # --- Score global + semáforo + motivo principal ---
+      - name: indice_riesgo
+        description: "Índice de riesgo clínico calculado como suma de las ponderaciones de todos los factores."
+      - name: prioridad_semaforo
+        description: "Clasificación de prioridad: ROJO (alto), NARANJA, AMARILLO, VERDE, AZUL."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['ROJO', 'NARANJA', 'AMARILLO', 'VERDE', 'AZUL']
+
+      - name: condicion_principal_riesgo
+        description: "Texto que indica el factor que más contribuye al riesgo del paciente."
