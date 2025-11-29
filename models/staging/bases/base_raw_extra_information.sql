@@ -10,4 +10,4 @@ SELECT
     -- Paciente oncológico (True/False)
     CAST("ESTADO_ONCOLOGICO" AS BOOLEAN) AS es_paciente_oncologico
 
-FROM MEDIC_RAW.RAW_DATA.RAW_DEMOGRAPHIC_SUBSET
+FROM MEDIC_RAW.RAW_DATA.raw_extra_information

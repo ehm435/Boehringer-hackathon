@@ -7,4 +7,4 @@ WITH src AS (
 SELECT
     patient_id,
     es_paciente_oncologico
-FROM src;
+FROM src

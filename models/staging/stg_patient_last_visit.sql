@@ -7,4 +7,4 @@ WITH src AS (
 SELECT
     patient_id,
     ultima_visita_ts AS fecha_ultima_visita
-FROM src;
+FROM src
