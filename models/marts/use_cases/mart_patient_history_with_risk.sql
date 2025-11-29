@@ -49,4 +49,4 @@ from {{ ref('fact_patient_clinical') }} f
 join {{ ref('dim_patient') }} p
   on f.patient_sk = p.patient_sk
 join {{ ref('dim_date') }} d
-  on f.date_sk = d.date_sk;
+  on f.date_sk = d.date_sk

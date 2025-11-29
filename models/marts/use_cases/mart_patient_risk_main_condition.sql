@@ -47,4 +47,4 @@ select
     indice_riesgo,
     prioridad_semaforo,
     condicion_principal_riesgo
-from latest_per_patient;
+from latest_per_patient

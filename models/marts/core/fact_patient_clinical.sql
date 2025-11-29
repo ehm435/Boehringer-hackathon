@@ -425,4 +425,4 @@ select
     prioridad_semaforo,
     condicion_principal_riesgo
 
-from scoring_final;
+from scoring_final
