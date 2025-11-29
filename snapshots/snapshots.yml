@@ -1,0 +1,29 @@
+version: 2
+
+snapshots:
+
+  - name: patients_snapshot
+    description: "SCD2: Histórico de cambios en los datos demográficos del paciente."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+          - unique
+
+  - name: patient_conditions_snapshot
+    description: "SCD2: Histórico de cambios en condiciones clínicas del paciente."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+          - unique
+
+  - name: drugs_snapshot
+    description: "SCD2: Histórico del catálogo de medicamentos."
+    columns:
+      - name: codigo_medicamento
+        tests:
+          - not_null
+          - unique
+
+  

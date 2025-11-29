@@ -1,4 +1,4 @@
-09:13:34 version: 2
+version: 2
 
 sources:
   - name: raw_data
@@ -163,4 +163,17 @@ sources:
             description: ""
           - name: smq040
             data_type: number
+            description: ""
+    
+      - name: raw_extra_information
+        description: ""
+        columns:
+          - name: seqn
+            data_type: number
+            description: ""
+          - name: estado_oncologico
+            data_type: boolean
+            description: ""
+          - name: last_visitn
+            data_type: timestamp
             description: ""

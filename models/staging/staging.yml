@@ -1,0 +1,112 @@
+version: 2
+
+models:
+
+  - name: stg_patients
+    description: "Datos demográficos normalizados del paciente."
+    columns:
+      - name: patient_id
+        description: "Identificador único del paciente."
+        tests:
+          - not_null
+          - unique
+      - name: sexo_biologico_codigo
+      - name: edad_anios
+      - name: nivel_educativo_codigo
+      - name: estado_civil_codigo
+      - name: embarazo_estado_codigo
+      - name: idioma_entrevista_codigo
+
+  - name: stg_patient_vitals
+    description: "Constantes vitales y medidas antropométricas."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: tension_sistolica_1_mm_hg
+      - name: tension_sistolica_2_mm_hg
+      - name: tension_sistolica_3_mm_hg
+      - name: tension_sistolica_4_mm_hg
+      - name: tension_diastolica_1_mm_hg
+      - name: tension_diastolica_2_mm_hg
+      - name: tension_diastolica_3_mm_hg
+      - name: peso_kg
+      - name: talla_cm
+      - name: imc
+      - name: cintura_cm
+
+  - name: stg_patient_labs
+    description: "Resultados analíticos del paciente (labs)."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: glucosa_plasmatica_mg_dl
+      - name: hba1c_porcentaje
+      - name: creatinina_mg_dl
+      - name: urea_mg_dl
+      - name: colesterol_total_mg_dl
+      - name: colesterol_hdl_mg_dl
+      - name: colesterol_ldl_mg_dl
+      - name: sodio_mmol_l
+      - name: potasio_mmol_l
+      - name: hemoglobina_g_dl
+      - name: hematocrito_porcentaje
+
+  - name: stg_patient_conditions
+    description: "Condiciones clínicas, diagnósticos y hábitos del paciente."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: hta_diagnosticada_codigo
+      - name: hta_tratamiento_farmaco_codigo
+      - name: diabetes_diagnosticada_codigo
+      - name: diabetes_tratamiento_farmaco_codigo
+      - name: tabaquismo_vida_codigo
+      - name: tabaquismo_actual_codigo
+      - name: consumo_alcohol_frecuencia_codigo
+      - name: cardiopatia_diagnosticada_codigo
+      - name: asma_diagnosticada_codigo
+      - name: epoc_u_otro_pulmonar_cronico_codigo
+
+  - name: stg_drugs
+    description: "Catálogo normalizado de medicamentos."
+    columns:
+      - name: codigo_medicamento
+        tests:
+          - not_null
+          - unique
+      - name: nombre_medicamento
+
+  - name: stg_patient_medications
+    description: "Relación paciente–medicación en uso."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: codigo_medicamento
+      - name: indicador_uso_medicamento_codigo
+      - name: dias_uso_reportados
+
+  - name: stg_patient_last_visit
+    description: "Fecha de última visita registrada por paciente."
+    columns:
+      - name: patient_id
+        description: "Identificador único del paciente."
+        tests:
+          - not_null
+          - unique
+      - name: fecha_ultima_visita
+        description: "Fecha y hora de la última visita registrada del paciente."
+
+  - name: stg_patient_oncology_status
+    description: "Estado oncológico del paciente (si tiene o no diagnóstico oncológico)."
+    columns:
+      - name: patient_id
+        description: "Identificador único del paciente."
+        tests:
+          - not_null
+          - unique
+      - name: es_paciente_oncologico
+        description: "Indicador booleano de si el paciente presenta patología oncológica."
