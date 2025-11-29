@@ -303,11 +303,11 @@ scoring_final as (
         w.*,
 
         case
-            when indice_riesgo >= 10 then 'ROJO'
-            when indice_riesgo between 6 and 9 then 'NARANJA'
-            when indice_riesgo between 3 and 5 then 'AMARILLO'
-            when indice_riesgo between 1 and 2 then 'VERDE'
-            else 'AZUL'
+            when indice_riesgo >= 10 then 'R'
+            when indice_riesgo between 6 and 9 then 'N'
+            when indice_riesgo between 3 and 5 then 'A'
+            when indice_riesgo between 1 and 2 then 'V'
+            else 'B'
         end as prioridad_semaforo,
 
         case
