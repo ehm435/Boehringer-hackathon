@@ -11,7 +11,7 @@ with base as (
         f.patient_sk,
         p.patient_id_natural,
         p.edad_anios,
-        p.sexo_biologico_codigo,
+        p.sexo,
         d.full_date                 as fecha_referencia,
 
         -- directamente desde la fact
@@ -43,7 +43,7 @@ select
     patient_id_natural,
     fecha_referencia,
     edad_anios,
-    sexo_biologico_codigo,
+    sexo,
     indice_riesgo,
     prioridad_semaforo,
     condicion_principal_riesgo
