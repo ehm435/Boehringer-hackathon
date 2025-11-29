@@ -1,0 +1,158 @@
+version: 2
+
+models:
+
+  - name: dim_patient
+    description: "Dimensión 360 del paciente: demografía, condiciones clínicas, oncología y última visita."
+    columns:
+      - name: patient_sk
+        description: "Clave surrogate de la dimensión paciente."
+        tests:
+          - not_null
+          - unique
+
+      - name: patient_id_natural
+        description: "Identificador natural del paciente (SEQN del estudio)."
+        tests:
+          - not_null
+          - unique
+
+      # Demografía
+      - name: sexo_biologico_codigo
+        description: "Código de sexo biológico (por ejemplo 1=hombre, 2=mujer)."
+      - name: edad_anios
+        description: "Edad del paciente en años."
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "edad_anios is null or (edad_anios between 0 and 120)"
+      - name: nivel_educativo_codigo
+        description: "Código de nivel educativo."
+      - name: estado_civil_codigo
+        description: "Código de estado civil."
+      - name: embarazo_estado_codigo
+        description: "Código del estado de embarazo."
+      - name: idioma_entrevista_codigo
+        description: "Código del idioma de entrevista."
+
+      # Condiciones clínicas / hábitos
+      - name: hta_diagnosticada_codigo
+        description: "Indicador/código de hipertensión arterial diagnosticada."
+      - name: diabetes_diagnosticada_codigo
+        description: "Indicador/código de diabetes mellitus diagnosticada."
+      - name: tabaquismo_actual_codigo
+        description: "Código de hábito tabáquico actual."
+      - name: cardiopatia_diagnosticada_codigo
+        description: "Indicador/código de cardiopatía diagnosticada."
+      - name: epoc_u_otro_pulmonar_cronico_codigo
+        description: "Indicador/código de EPOC u otra enfermedad pulmonar crónica."
+
+      # Oncología
+      - name: es_paciente_oncologico
+        description: "Indica si el paciente tiene diagnóstico oncológico."
+        tests:
+          - dbt_utils.accepted_values:
+              values: [true, false]
+
+      # Última visita
+      - name: fecha_ultima_visita
+        description: "Fecha y hora de la última visita conocida del paciente."
+
+  - name: dim_date
+    description: "Dimensión de fechas diaria para análisis temporal."
+    columns:
+      - name: date_sk
+        description: "Clave surrogate de la fecha."
+        tests:
+          - not_null
+          - unique
+
+      - name: full_date
+        description: "Fecha completa (YYYY-MM-DD)."
+        tests:
+          - not_null
+          - unique
+
+      - name: year
+        description: "Año calendario."
+      - name: month
+        description: "Mes numérico (1-12)."
+      - name: day
+        description: "Día del mes (1-31)."
+      - name: week_of_year
+        description: "Semana del año."
+      - name: day_of_week
+        description: "Día de la semana como número."
+      - name: month_name
+        description: "Nombre abreviado del mes."
+      - name: day_name
+        description: "Nombre abreviado del día de la semana."
+
+  - name: fact_patient_clinical
+    description: >
+      Tabla de hechos clínica a nivel paciente-fecha de referencia. Contiene las últimas
+      métricas disponibles (IMC, analíticas, utilización del sistema, resumen de medicación)
+      para calcular scores de riesgo y priorización en los datamarts.
+    columns:
+      - name: fact_patient_clinical_sk
+        description: "Clave surrogate de la fila de hechos (patient_sk + date_sk)."
+        tests:
+          - not_null
+          - unique
+
+      - name: patient_sk
+        description: "Clave surrogate de la dimensión paciente."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_patient')
+              field: patient_sk
+
+      - name: date_sk
+        description: "Clave surrogate de la dimensión fecha."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_sk
+
+      # Vitals
+      - name: tension_sistolica_media
+        description: "Tensión arterial sistólica media estimada (mmHg)."
+      - name: tension_diastolica_media
+        description: "Tensión arterial diastólica media estimada (mmHg)."
+      - name: imc
+        description: "Índice de masa corporal (kg/m²)."
+
+      # Labs
+      - name: glucosa_plasmatica_mg_dl
+        description: "Glucosa plasmática en ayunas (mg/dL)."
+      - name: hba1c_porcentaje
+        description: "Hemoglobina glicosilada (HbA1c, %)."
+      - name: creatinina_mg_dl
+        description: "Creatinina sérica (mg/dL)."
+      - name: urea_mg_dl
+        description: "Urea (mg/dL)."
+      - name: colesterol_total_mg_dl
+        description: "Colesterol total (mg/dL)."
+      - name: colesterol_hdl_mg_dl
+        description: "Colesterol HDL (mg/dL)."
+      - name: colesterol_ldl_mg_dl
+        description: "Colesterol LDL (mg/dL)."
+      - name: sodio_mmol_l
+        description: "Sodio (mmol/L)."
+      - name: potasio_mmol_l
+        description: "Potasio (mmol/L)."
+      - name: hemoglobina_g_dl
+        description: "Hemoglobina (g/dL)."
+      - name: hematocrito_porcentaje
+        description: "Hematocrito (%)."
+
+      # Medición de medicación agregada
+      - name: num_medicamentos_activos
+        description: "Número de medicamentos activos reportados para el paciente."
+      - name: dias_medios_uso_reportados
+        description: "Días medios de uso reportados de la medicación."
+
+      # Utilización del sistema (cuando lo tengas calculado)
+      - name: num_urgencias_12m
+        description: "Número de visitas a urgencias en los últimos 12 meses."

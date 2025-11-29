@@ -5,16 +5,15 @@
     target_database = 'HACKATON_SILVER',
     target_schema   = 'SNAPSHOTS',
     unique_key      = 'patient_id',
-    strategy        = 'check',
-    check_cols      = [
-      'fecha_ultima_visita'
-    ]
+    strategy        = 'timestamp',
+    updated_at      = 'fecha_ultima_visita',
+    invalidate_hard_deletes = true
   )
 }}
 
-SELECT
+select
     patient_id,
     fecha_ultima_visita
-FROM {{ ref('stg_patient_last_visit') }}
+from {{ ref('stg_patient_last_visit') }}
 
 {% endsnapshot %}

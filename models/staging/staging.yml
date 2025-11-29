@@ -11,6 +11,10 @@ models:
           - not_null
           - unique
       - name: sexo_biologico_codigo
+        tests:
+        - not_null
+        - accepted_values:
+              values: [1, 2]
       - name: edad_anios
       - name: nivel_educativo_codigo
       - name: estado_civil_codigo
@@ -23,6 +27,9 @@ models:
       - name: patient_id
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_patients')
+              field: patient_id
       - name: tension_sistolica_1_mm_hg
       - name: tension_sistolica_2_mm_hg
       - name: tension_sistolica_3_mm_hg
@@ -41,6 +48,9 @@ models:
       - name: patient_id
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_patients')
+              field: patient_id
       - name: glucosa_plasmatica_mg_dl
       - name: hba1c_porcentaje
       - name: creatinina_mg_dl
