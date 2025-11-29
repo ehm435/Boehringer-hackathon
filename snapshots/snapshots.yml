@@ -1,0 +1,64 @@
+version: 2
+
+snapshots:
+
+  - name: patients_snapshot
+    description: "SCD2: Histórico de cambios en los datos demográficos del paciente."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+          - unique
+
+  - name: patient_conditions_snapshot
+    description: "SCD2: Histórico de cambios en condiciones clínicas del paciente."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+          - unique
+
+  - name: drugs_snapshot
+    description: "SCD2: Histórico del catálogo de medicamentos."
+    columns:
+      - name: codigo_medicamento
+        tests:
+          - not_null
+          - unique
+
+  - name: patient_last_visit_snapshot
+    description: "Snapshot SCD2 que registra la evolución histórica de la fecha de última visita de cada paciente."
+    meta:
+      owner: "analytics"
+      grain: ["patient_id"]
+      scd_type: "SCD2 (strategy = check)"
+    columns:
+      - name: patient_id
+        description: "Identificador único del paciente."
+        tests:
+          - not_null
+      - name: fecha_ultima_visita
+        description: "Fecha y hora de la última visita conocida en cada versión del estado del paciente."
+      - name: dbt_valid_from
+        description: "Inicio del periodo de validez del registro en el snapshot."
+      - name: dbt_valid_to
+        description: "Fin del periodo de validez del registro en el snapshot."
+
+
+  - name: patient_oncology_snapshot
+    description: "Snapshot SCD2 que registra cambios históricos en el estado oncológico del paciente."
+    meta:
+      owner: "analytics"
+      grain: ["patient_id"]
+      scd_type: "SCD2 (strategy = check)"
+    columns:
+      - name: patient_id
+        description: "Identificador único del paciente."
+        tests:
+          - not_null
+      - name: es_paciente_oncologico
+        description: "Indicador histórico del estado oncológico del paciente (true/false)."
+      - name: dbt_valid_from
+        description: "Inicio del periodo de validez del registro en el snapshot."
+      - name: dbt_valid_to
+        description: "Fin del periodo de validez del registro en el snapshot."
