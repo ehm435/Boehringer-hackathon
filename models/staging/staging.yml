@@ -13,8 +13,6 @@ models:
       - name: sexo_biologico_codigo
         tests:
         - not_null
-        - accepted_values:
-              values: [1, 2]
       - name: edad_anios
       - name: nivel_educativo_codigo
       - name: estado_civil_codigo

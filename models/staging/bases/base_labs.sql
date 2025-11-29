@@ -1,7 +1,7 @@
 {{ config(materialized='view') }}
 
 SELECT
-    CAST("SEQN"    AS NUMBER(38,0)) AS patient_id,
+    CAST("SEQN"   AS varchar) AS patient_id,
 
     -- Glucosa y HbA1c
     CAST("LBXGLT"  AS NUMBER(6,1))  AS glucosa_plasmatica_mg_dl,

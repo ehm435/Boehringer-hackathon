@@ -1,7 +1,7 @@
 {{ config(materialized='view') }}
 
 SELECT
-    CAST("SEQN"    AS NUMBER(38,0)) AS patient_id,
+    CAST("SEQN"    AS varchar) AS patient_id,
 
     -- Hipertensión
     CAST("BPQ020"  AS NUMBER(3,0))  AS hta_diagnosticada_codigo,

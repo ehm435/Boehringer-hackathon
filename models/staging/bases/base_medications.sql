@@ -1,7 +1,7 @@
 {{ config(materialized='view') }}
 
 SELECT
-    CAST("SEQN"     AS NUMBER(38,0)) AS patient_id,
+    CAST("SEQN"    AS varchar) AS patient_id,
     CAST("RXDUSE"   AS NUMBER(3,0))  AS indicador_uso_medicamento_codigo,
     "RXDDRUG"                       AS nombre_medicamento,
     "RXDDRGID"                      AS codigo_medicamento,
