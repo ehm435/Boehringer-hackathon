@@ -209,7 +209,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['ROJO', 'NARANJA', 'AMARILLO', 'VERDE', 'AZUL']
+              values: ['R', 'N', 'A', 'V', 'B']
 
       - name: condicion_principal_riesgo
         description: "Texto que indica el factor que más contribuye al riesgo del paciente."
