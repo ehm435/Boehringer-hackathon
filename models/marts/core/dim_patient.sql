@@ -7,7 +7,7 @@ with demo as (
 
     select
         patient_id                         as patient_id_natural,
-        sexo_biologico_codigo,
+        sexo,
         edad_anios,
         nivel_educativo_codigo,
         estado_civil_codigo,
@@ -23,7 +23,6 @@ cond as (
 
     select
         patient_id,
-
         hta_diagnosticada_codigo,
         diabetes_diagnosticada_codigo,
         tabaquismo_actual_codigo,
@@ -63,7 +62,7 @@ joined as (
         d.patient_id_natural,
 
         -- Demografía
-        d.sexo_biologico_codigo,
+        d.sexo,
         d.edad_anios,
         d.nivel_educativo_codigo,
         d.estado_civil_codigo,

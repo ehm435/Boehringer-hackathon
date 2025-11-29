@@ -16,7 +16,7 @@
 
 select
     patient_id,
-    sexo_biologico_codigo,
+    sexo,
     edad_anios,
     nivel_educativo_codigo,
     estado_civil_codigo,

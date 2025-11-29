@@ -10,7 +10,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: sexo_biologico_codigo
+      - name: sexo
         tests:
         - not_null
       - name: edad_anios

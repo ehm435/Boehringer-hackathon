@@ -17,7 +17,7 @@ sexo_norm as (
 
 select
     patient_id,
-    sexo_biologico as sexo_biologico_codigo,
+    sexo_biologico as sexo,
     edad_anios,
     nivel_educativo_codigo,
     estado_civil_codigo,

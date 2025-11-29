@@ -14,7 +14,7 @@ select
 
     -- Datos de paciente
     p.edad_anios,
-    p.sexo_biologico_codigo,
+    p.sexo,
     p.hta_diagnosticada_codigo,
     p.diabetes_diagnosticada_codigo,
     p.cardiopatia_diagnosticada_codigo,
